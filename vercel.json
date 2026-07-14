@@ -11,5 +11,8 @@
       "src": "/(.*)",
       "dest": "Backend/electronicstore/electronicstore/wsgi.py"
     }
-  ]
+  ],
+  "env": {
+    "PYTHONPATH": "Backend/electronicstore"
+  }
 }
