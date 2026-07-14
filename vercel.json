@@ -4,20 +4,9 @@
     {
       "src": "Backend/electronicstore/electronicstore/wsgi.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles"
-      }
     }
   ],
   "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/$1"
-    },
     {
       "src": "/(.*)",
       "dest": "Backend/electronicstore/electronicstore/wsgi.py"
