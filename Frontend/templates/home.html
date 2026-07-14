@@ -1,0 +1,606 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ shop.name|default:"MD Electronics" }} - Premium Smart Electronics & Appliances{% endblock %}
+
+{% block extra_head %}
+<style>
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    padding: 6rem 2rem 4rem 2rem;
+}
+.hero-content {
+    flex: 1;
+    max-width: 550px;
+}
+.hero-content h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+.hero-content p.lang-en {
+    color: #06b6d4;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: block;
+}
+.hero-separator {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+}
+.hero-description {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    font-size: 1.1rem;
+    margin-bottom: 2.2rem;
+    max-width: 480px;
+}
+.hero-image-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.hero-appliance-image {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 15px 35px rgba(6, 182, 212, 0.3));
+    animation: floatImage 6s ease-in-out infinite;
+}
+@keyframes floatImage {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Features Bar styling */
+.features-bar {
+    margin-top: 2rem;
+    margin-bottom: 3.5rem;
+    padding: 0 1.5rem;
+}
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    padding: 2rem;
+}
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.feature-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #06b6d4;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+}
+.feature-icon {
+    width: 22px;
+    height: 22px;
+}
+.feature-text h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.2rem;
+}
+.feature-text p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.btn-primary-premium {
+    background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(124, 58, 237, 0.25);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-primary-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
+    color: #fff;
+}
+.btn-secondary-premium {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.btn-secondary-premium:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+    color: #fff;
+}
+.promo-offer-title {
+    color: #ffffff;
+}
+
+/* Light mode overrides for home page elements */
+body.light-theme .btn-secondary-premium {
+    color: var(--text-primary);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+body.light-theme .btn-secondary-premium:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.35);
+    color: var(--text-primary);
+}
+body.light-theme .features-container {
+    background: rgba(255, 255, 255, 0.45);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+body.light-theme .feature-text h3 {
+    color: var(--text-primary);
+}
+body.light-theme .feature-icon-wrapper {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+body.light-theme .promo-offer-card {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-color: rgba(124, 58, 237, 0.3) !important;
+}
+body.light-theme .promo-offer-title {
+    color: var(--text-primary) !important;
+}
+
+@media (max-width: 1024px) {
+    .features-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        gap: 3rem;
+        padding: 4rem 1rem 2rem 1rem;
+    }
+    .hero-content {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    .hero-description {
+        max-width: 100%;
+    }
+}
+@media (max-width: 520px) {
+    .features-container {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero fade-in-section">
+    <div class="hero-content">
+        <h1>MD Electronics<br><span class="gradient-text">Punganur</span></h1>
+        <p class="lang-en">Smart Electronics for Modern Living</p>
+        <p class="lang-te" style="font-size: 1.4rem; font-weight: 600; color: #06b6d4; margin-bottom: 1rem;">ఆధునిక జీవనశైలి కోసం స్మార్ట్ ఎలక్ట్రానిక్స్</p>
+        
+        <div class="hero-separator"></div>
+        
+        <p class="lang-en hero-description">Discover the latest electronics and home appliances from top brands. Quality products, best prices and trusted service – all in one place.</p>
+        <p class="lang-te hero-description">అగ్రశ్రేణి బ్రాండ్ల నుండి అత్యాధునిక ఎలక్ట్రానిక్స్ మరియు గృహోపకరణాలను అన్వేషించండి. నాణ్యమైన ఉత్పత్తులు, ఉత్తమ ధరలు మరియు నమ్మకమైన సేవలు – అన్నీ ఒకే చోట.</p>
+        
+        <div class="hero-buttons">
+            <a href="{% url 'store:products' %}" class="btn-primary-premium">
+                <span class="lang-en">Our Showcase <span style="margin-left: 8px;">→</span></span>
+                <span class="lang-te">మా ప్రదర్శనశాల <span style="margin-left: 8px;">→</span></span>
+            </a>
+            <a href="{% url 'store:contact' %}" class="btn-secondary-premium">
+                <span class="lang-en">Visit Showroom <span style="margin-left: 8px;">→</span></span>
+                <span class="lang-te">షోరూమ్ సందర్శించండి <span style="margin-left: 8px;">→</span></span>
+            </a>
+        </div>
+    </div>
+    <div class="hero-image-wrapper">
+        <div class="hero-glow"></div>
+        <img src="{% static 'images/hero_appliances.png' %}" alt="Smart Home Appliances" class="hero-appliance-image" loading="lazy">
+    </div>
+</section>
+
+<!-- Active Promotional Banner Offers -->
+{% if active_offers %}
+<section class="products-section fade-in-section" style="margin-top: 1rem; margin-bottom: 4rem;">
+    {% for offer in active_offers %}
+    <div class="promo-offer-card" data-offer-color="{{ offer.color|default:'var(--accent-purple)' }}"
+        style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--accent-purple); border-radius: 24px; padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; gap: 2rem; position: relative; overflow: hidden; box-shadow: var(--shadow-glow);">
+        <div class="promo-offer-glow"
+            style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; filter: blur(80px); opacity: 0.35; pointer-events: none;">
+        </div>
+        <div>
+            <span class="promo-offer-badge"
+                style="color: white; padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: var(--shadow-sm);">Special
+                Offer</span>
+            <h3 class="promo-offer-title" style="font-size: 1.6rem; font-weight: 800; margin-top: 0.85rem;">{{ offer.title }}</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.4rem; font-size: 1rem; line-height: 1.5;">{{
+                offer.description }}</p>
+        </div>
+        <div
+            style="text-align: right; flex-shrink: 0; padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,0.06);">
+            <div
+                style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">
+                Promo Code</div>
+            <div class="promo-offer-code"
+                style="font-size: 1.8rem; font-weight: 800; letter-spacing: 0.05em; margin-top: 0.25rem;">{{
+                offer.promocode }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+<!-- Features Bar (Trust Section) -->
+<section class="features-bar fade-in-section">
+    <div class="features-container">
+        <!-- Feature 1 -->
+        <div class="feature-item">
+            <div class="feature-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="feature-text">
+                <h3>100% Original</h3>
+                <p>Genuine Products</p>
+            </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="feature-item">
+            <div class="feature-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+            </div>
+            <div class="feature-text">
+                <h3>Best Quality</h3>
+                <p>Trusted Brands</p>
+            </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="feature-item">
+            <div class="feature-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </div>
+            <div class="feature-text">
+                <h3>Great Support</h3>
+                <p>Always Here to Help</p>
+            </div>
+        </div>
+        <!-- Feature 4 -->
+        <div class="feature-item">
+            <div class="feature-icon-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="feature-text">
+                <h3>Fast Delivery</h3>
+                <p>Quick & Safe</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Authorized Brand Partners Section -->
+<section class="products-section fade-in-section" style="margin-top:2rem;">
+    <h2 class="section-title">
+        <span class="lang-en">Authorized Brand Partners</span>
+        <span class="lang-te">అధికారిక బ్రాండ్ భాగస్వాములు</span>
+    </h2>
+    <p style="color:var(--text-secondary); margin-bottom:2rem; margin-top:-1rem;">
+        <span class="lang-en">We are authorized dealers for premium home appliances and smart electronics brands.</span>
+        <span class="lang-te">మేము ప్రీమియం హోమ్ అప్లయన్స్ మరియు స్మార్ట్ ఎలక్ట్రానిక్స్ బ్రాండ్‌ల అధికారిక
+            డీలర్లం.</span>
+    </p>
+    <div class="brands-grid">
+        <div class="brand-logo-card">Haier</div>
+        <div class="brand-logo-card">LG</div>
+        <div class="brand-logo-card">SAMSUNG</div>
+        <div class="brand-logo-card">SONY</div>
+        <div class="brand-logo-card">TCL</div>
+    </div>
+</section>
+
+<!-- Featured Products Showcase -->
+<section class="products-section fade-in-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2.5rem;">
+        <h2 class="section-title" style="margin-bottom:0;">
+            <span class="lang-en">Featured Products</span>
+            <span class="lang-te">ప్రత్యేక ఉత్పత్తులు</span>
+        </h2>
+        <a href="{% url 'store:products' %}" class="product-btn" style="padding:0.6rem 1.4rem;">
+            <span class="lang-en">View All Catalog</span>
+            <span class="lang-te">మొత్తం కేటలాగ్ చూడండి</span>
+        </a>
+    </div>
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <!-- Wishlist Button -->
+            <button class="wishlist-btn" data-id="{{ product.id }}" data-name="{{ product.name }}"
+                data-price="{{ product.price }}"
+                data-image="{% if product.image %}{{ product.image.url }}{% endif %}">🤍</button>
+            <span class="product-badge">Dealer Special</span>
+            <div class="product-img-wrapper">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                {% else %}
+                <img src="https://via.placeholder.com/400" alt="{{ product.name }}" loading="lazy">
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <span class="product-cat">{{ product.category }}</span>
+                <h3 class="product-title"><a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a>
+                </h3>
+                <p class="product-desc">{{ product.description }}</p>
+
+                <!-- Compare Checkbox -->
+                <label class="compare-checkbox-label">
+                    <input type="checkbox" class="compare-checkbox" data-id="{{ product.id }}"
+                        data-name="{{ product.name }}" data-brand="{{ product.brand }}"
+                        data-category="{{ product.category }}" data-price="{{ product.price }}"
+                        data-description="{{ product.description }}">
+                    <span>
+                        <span class="lang-en">Compare specs</span>
+                        <span class="lang-te">పోల్చండి</span>
+                    </span>
+                </label>
+
+                <div class="product-footer">
+                    <span class="product-price">{{ product.price|floatformat:0 }}</span>
+                    <button class="product-btn" data-id="{{ product.id }}" data-name="{{ product.name }}"
+                        data-price="{{ product.price }}"
+                        data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
+                        <span class="lang-en">Add to Cart</span>
+                        <span class="lang-te">కార్ట్‌కు జోడించు</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 3rem 0;">No products
+            synchronized yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Finance Options Section -->
+<section class="products-section fade-in-section">
+    <h2 class="section-title">
+        <span class="lang-en">Finance Available Here</span>
+        <span class="lang-te">ఫైనాన్స్ సౌకర్యం కలదు</span>
+    </h2>
+    <p style="color:var(--text-secondary); margin-bottom:2rem; margin-top:-1rem;">
+        <span class="lang-en">Easy EMI options and instant financing assistance available at our showroom.</span>
+        <span class="lang-te">మా షోరూమ్‌లో సులభమైన ఈఎంఐ (EMI) ఆప్షన్స్ మరియు తక్షణ ఫైనాన్స్ సహాయం అందుబాటులో
+            ఉన్నాయి.</span>
+    </p>
+    <div class="finance-grid">
+        <div class="finance-card">Bajaj Finserv</div>
+        <div class="finance-card">TVS Credit</div>
+        <div class="finance-card">HDB Financial</div>
+        <div class="finance-card">Chola Finance</div>
+    </div>
+</section>
+
+<!-- Meet the Owner Section -->
+<section class="owner-section fade-in-section">
+    <div class="owner-avatar" style="overflow:hidden; display:flex; align-items:center; justify-content:center;">
+        {% if shop.owner_photo_url %}
+        <img src="{{ shop.owner_photo_url }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+        {% else %}
+        MDA
+        {% endif %}
+    </div>
+    <div class="owner-info">
+        <h3>{{ shop.owner_name|default:"M.D. Aftab" }}</h3>
+        <div class="owner-title">Showroom Proprietor</div>
+        <p>{{ shop.owner_bio|default:"Welcome to MD Electronics. We have been serving the Punganur region for over 15 years with premium products, quick delivery, and dedicated customer support. Customer happiness is our pride. Visit our showroom at Gokul Circle to explore the latest technology for your home!" }}</p>
+    </div>
+</section>
+
+<!-- Showroom Gallery Section -->
+<section class="products-section fade-in-section">
+    <h2 class="section-title">
+        <span class="lang-en">Showroom Gallery</span>
+        <span class="lang-te">షోరూమ్ గ్యాలరీ</span>
+    </h2>
+    <div class="gallery-grid">
+        <div class="gallery-card">
+            <span class="lang-en">📺 Premium LED TV Wall Showcase</span>
+            <span class="lang-te">📺 ప్రీమియం ఎల్ఈడీ టీవీ వాల్ ప్రదర్శన</span>
+        </div>
+        <div class="gallery-card">
+            <span class="lang-en">🧺 Inverter Washing Machines Aisle</span>
+            <span class="lang-te">🧺 ఇన్వర్టర్ వాషింగ్ మెషీన్స్ విభాగం</span>
+        </div>
+        <div class="gallery-card">
+            <span class="lang-en">❄️ Smart Refrigerators & AC Display</span>
+            <span class="lang-te">❄️ స్మార్ట్ రిఫ్రిజిరేటర్స్ & ఏసీ ప్రదర్శన</span>
+        </div>
+    </div>
+</section>
+
+<!-- Instagram Feed Section -->
+<section class="products-section fade-in-section">
+    <h2 class="section-title">Follow Us on Instagram</h2>
+    <p style="color:var(--text-secondary); margin-bottom:2rem; margin-top:-1rem;">Stay updated with our latest stock
+        arrivals, happy customer deliveries, and festive deals at <strong>@md_electronics_punganur</strong></p>
+
+    <div class="insta-feed" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        {% for post in instagram_posts %}
+        <div class="insta-post-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-glow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; padding: 1.25rem 0; width: 100%; max-width: 350px; margin: 0 auto; box-sizing: border-box;">
+            <iframe src="{{ post.embed_url }}" style="background: white; border: none; border-radius: 12px; width: 320px; height: 440px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" scrolling="no" allowtransparency="true" frameborder="0"></iframe>
+            <div style="padding: 1rem 1.5rem 0 1.5rem; width: 100%; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-secondary);">
+                <span>📅 {{ post.added_on }}</span>
+                <a href="{{ post.url }}" target="_blank" style="color: var(--accent-blue); font-weight: 700; text-decoration: none;">View on Instagram ↗</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="insta-post" style="cursor: pointer;" onclick="window.open('https://instagram.com', '_blank')">
+            <span>New Haier refrigerator deliveries arrived at Punganur showroom today!</span>
+        </div>
+        <div class="insta-post" style="cursor: pointer;" onclick="window.open('https://instagram.com', '_blank')">
+            <span>Happy customer taking home their LG 65" OLED TV. Thanks for trusting us!</span>
+        </div>
+        <div class="insta-post" style="cursor: pointer;" onclick="window.open('https://instagram.com', '_blank')">
+            <span>Festive Diwali discounts starting soon. Visit Gokul Circle store!</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align:center; margin-top:1.5rem;">
+        <a href="https://instagram.com" target="_blank" class="btn btn-secondary">
+            <span class="lang-en">Visit Instagram Profile</span>
+            <span class="lang-te">ఇన్‌స్టాగ్రామ్ ప్రొఫైల్ చూడండి</span>
+        </a>
+    </div>
+</section>
+
+<!-- Contact & Google Map Section -->
+<section class="contact-section-home fade-in-section">
+    <div class="contact-grid-home">
+        <!-- Contact Info Card (Left) -->
+        <div class="contact-card-home">
+            <div class="section-header">
+                <h2 class="gradient-text">
+                    <span class="lang-en">Contact Us</span>
+                    <span class="lang-te">మమ్మల్ని సంప్రదించండి</span>
+                </h2>
+                <p>
+                    <span class="lang-en">Have questions or need support? Visit our showroom or get in touch through any
+                        of the options below.</span>
+                    <span class="lang-te">ఏవైనా ప్రశ్నలు ఉన్నాయా లేదా సహాయం కావాలా? మా షోరూమ్‌ను సందర్శించండి లేదా
+                        క్రింది మార్గాల ద్వారా సంప్రదించండి.</span>
+                </p>
+            </div>
+
+            <div class="contact-info-list-premium">
+                <!-- Shop Name -->
+                <div class="contact-info-item-premium">
+                    <div class="contact-info-icon-box">🏪</div>
+                    <div class="contact-info-text">
+                        <h4>
+                            <span class="lang-en">Shop Name</span>
+                            <span class="lang-te">దుకాణము పేరు</span>
+                        </h4>
+                        <p>{{ shop.name|default:"MD Electronics" }}</p>
+                    </div>
+                </div>
+                <!-- Phone -->
+                <div class="contact-info-item-premium">
+                    <div class="contact-info-icon-box">📞</div>
+                    <div class="contact-info-text">
+                        <h4>
+                            <span class="lang-en">Phone Number</span>
+                            <span class="lang-te">ఫోన్ నంబర్</span>
+                        </h4>
+                        <p>{{ shop.phone|default:"+91 98765 43210" }}</p>
+                    </div>
+                </div>
+                <!-- Email -->
+                <div class="contact-info-item-premium">
+                    <div class="contact-info-icon-box">📧</div>
+                    <div class="contact-info-text">
+                        <h4>
+                            <span class="lang-en">Email Address</span>
+                            <span class="lang-te">ఈమెయిల్ చిరునామా</span>
+                        </h4>
+                        <p>{{ shop.email|default:"contact@mdelectronics.in" }}</p>
+                    </div>
+                </div>
+                <!-- Address -->
+                <div class="contact-info-item-premium">
+                    <div class="contact-info-icon-box">📍</div>
+                    <div class="contact-info-text">
+                        <h4>
+                            <span class="lang-en">Our Showroom Location</span>
+                            <span class="lang-te">షోరూమ్ స్థానం</span>
+                        </h4>
+                        <p>{{ shop.address|default:"Gokul Circle, Chowdepalle Road, Punganur, Chittoor District, Andhra Pradesh - 517247" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Map Embedding (Right) -->
+        <div class="contact-map-wrapper-premium">
+            <iframe title="MD Electronics Store Location Map"
+                src="https://maps.google.com/maps?q=Gokul%20Circle,%20Punganur,%20Andhra%20Pradesh&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.promo-offer-card').forEach(card => {
+            const color = card.getAttribute('data-offer-color');
+            if (color) {
+                card.style.borderColor = color;
+
+                const glow = card.querySelector('.promo-offer-glow');
+                if (glow) glow.style.backgroundColor = color;
+
+                const badge = card.querySelector('.promo-offer-badge');
+                if (badge) badge.style.backgroundColor = color;
+
+                const code = card.querySelector('.promo-offer-code');
+                if (code) code.style.color = color;
+            }
+        });
+    });
+</script>
+{% endblock %}

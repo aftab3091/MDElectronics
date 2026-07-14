@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Showcase - MD Electronics{% endblock %}
+
+{% block content %}
+<div class="catalog-layout fade-in-section">
+    <!-- Sidebar Filters -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Our Showcase</h2>
+        
+        <!-- Filter Form -->
+        <form method="GET" action="{% url 'store:products' %}" id="filterForm">
+            <!-- Sorting carrier -->
+            <input type="hidden" name="sort_by" value="{{ sort_by|default:'popularity' }}">
+
+            <!-- Categories Checklist -->
+            <div class="filter-group">
+                <h3 class="filter-group-title">Categories</h3>
+                <ul class="filter-checkbox-list">
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="category" value="Home Appliances" {% if "Home Appliances" in selected_categories %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Home Appliances</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="category" value="Smart TVs & Electronics" {% if "Smart TVs & Electronics" in selected_categories %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Smart TVs & Electronics</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="category" value="Kitchen Appliances" {% if "Kitchen Appliances" in selected_categories %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Kitchen Appliances</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Brand Checklist -->
+            <div class="filter-group">
+                <h3 class="filter-group-title">Brands</h3>
+                <ul class="filter-checkbox-list">
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="Samsung" {% if "Samsung" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Samsung</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="LG" {% if "LG" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>LG</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="Bosch" {% if "Bosch" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Bosch</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="Haier" {% if "Haier" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Haier</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="IFB" {% if "IFB" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>IFB</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="Voltas" {% if "Voltas" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Voltas</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="filter-checkbox-item">
+                            <input type="checkbox" name="brand" value="Prestige" {% if "Prestige" in selected_brands %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Prestige</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Price Range Slider -->
+            <div class="filter-group">
+                <h3 class="filter-group-title">Price Range</h3>
+                <div class="slider-container">
+                    <input type="range" name="max_price" id="priceSlider" class="range-input" min="1000" max="120000" step="500" value="{{ max_price|default:100000 }}" onchange="this.form.submit()">
+                    <div class="slider-values">
+                        <span>₹1,000</span>
+                        <span id="priceSliderValue">₹{{ max_price|default:100000|floatformat:0 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Filters -->
+            <a href="{% url 'store:products' %}" class="btn btn-secondary" style="width:100%; font-size:0.9rem; padding:0.5rem; text-align:center; display:block;">Reset Filters</a>
+        </form>
+    </aside>
+
+    <!-- Catalog View Panel -->
+    <section class="products-section">
+        <div class="catalog-header">
+            <div style="font-size:0.95rem; color:var(--text-secondary);">
+                Showing <strong>{{ products|length }}</strong> items
+            </div>
+            
+            <!-- Sort dropdown -->
+            <select class="catalog-sort" onchange="const form = document.getElementById('filterForm'); form.elements['sort_by'].value = this.value; form.submit();">
+                <option value="popularity" {% if sort_by == 'popularity' %}selected{% endif %}>Popularity</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <!-- Wishlist Toggle -->
+                <button class="wishlist-btn" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" data-image="{% if product.image %}{{ product.image.url }}{% endif %}">🤍</button>
+                
+                <div class="product-img-wrapper">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400" alt="{{ product.name }}" loading="lazy">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <span class="product-cat">{{ product.category }}</span>
+                    <h3 class="product-title"><a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a></h3>
+                    <p class="product-desc">{{ product.description }}</p>
+                    
+                    <!-- Compare Checkbox -->
+                    <label class="compare-checkbox-label">
+                        <input type="checkbox" class="compare-checkbox" data-id="{{ product.id }}" data-name="{{ product.name }}" data-brand="{{ product.brand }}" data-category="{{ product.category }}" data-price="{{ product.price }}" data-description="{{ product.description }}">
+                        <span>Compare specs</span>
+                    </label>
+
+                    <div class="product-footer">
+                        <span class="product-price">{{ product.price|floatformat:0 }}</span>
+                        <button class="product-btn" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" data-image="{% if product.image %}{{ product.image.url }}{% endif %}">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 5rem 0;">
+                <p style="font-size:1.2rem; font-weight:600; margin-bottom:0.5rem; color:white;">No products available</p>
+                <p style="font-size:0.95rem;">Try resetting the search terms or check back later.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

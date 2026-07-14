@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - MDElectronics{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Get In Touch</h2>
+<div class="contact-layout fade-in-section">
+    <!-- Contact Info Panel -->
+    <div class="contact-info-panel">
+        <div class="contact-card">
+            <div class="contact-icon">📍</div>
+            <div class="contact-details">
+                <h3>Store Location</h3>
+                <p>{{ shop.address|default:"D.No. 27-57/3, Gokul Circle, Chowdepalle Street, Punganur, AP - 517247" }}</p>
+            </div>
+        </div>
+        <div class="contact-card">
+            <div class="contact-icon">⏰</div>
+            <div class="contact-details">
+                <h3>Store Operating Hours</h3>
+                <p>{{ shop.hours|default:"Everyday: 9:00 AM - 9:00 PM" }}</p>
+            </div>
+        </div>
+        <div class="contact-card">
+            <div class="contact-icon">📞</div>
+            <div class="contact-details">
+                <h3>Call Helpline</h3>
+                <p>{{ shop.phone|default:"+91 98765 43210" }} (Customer Care)<br>info@mdelectronics.com</p>
+            </div>
+        </div>
+        <!-- Google Maps Embed Card -->
+        <div class="contact-card" style="padding: 0.5rem; overflow: hidden; height: 260px; display: block; border-color: rgba(6, 182, 212, 0.25);">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3883.3323719460293!2d78.577933!3d13.3917997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb246830a6e01a3%3A0xeab50d24e58be16e!2sGokul%20Circle%2C%20Punganur%2C%20Andhra%20Pradesh%20517247!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style="border:0; border-radius:12px; display:block;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Contact Form Panel -->
+    <div class="contact-form-panel">
+        <h2>Send An Inquiry</h2>
+        <p>Fill in details below and our sales agent will call you back within 24 hours.</p>
+        <form id="contactForm" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" id="phone" class="form-input" placeholder="9876543210" required>
+            </div>
+            <div class="form-group">
+                <label for="category" class="form-label">Select Appliance Category</label>
+                <select id="category" class="form-input" style="background:#090d16;" required>
+                    <option value="">Choose category...</option>
+                    <option value="Home Appliances">Home Appliances (Fridge, Washing Machine, AC)</option>
+                    <option value="Kitchen Appliances">Kitchen Appliances (Induction, Microwave)</option>
+                    <option value="Smart TVs & Electronics">Smart TVs & Electronics</option>
+                    <option value="General Enquiry" selected>General Enquiry</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message" class="form-label">Message / Specification Details</label>
+                <textarea id="message" class="form-input" placeholder="I am looking for a 5-star inverter AC for my home..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; border: none;">Submit Inquiry</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,358 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ shop.name|default:"MD Electronics" }} - Premium Smart Showroom{% endblock %}</title>
+    <meta name="description" content="{{ shop.tagline|default:'Serving Punganur region with premium electronics & smart home appliances.' }}">
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.3">
+    <script src="{% static 'js/script.js' %}" defer></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'store:home' %}" class="logo">
+                MD<span>Electronics</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links">
+                <li>
+                    <a href="{% url 'store:home' %}">
+                        <span class="lang-en">Home</span>
+                        <span class="lang-te">హోమ్</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:products' %}">
+                        <span class="lang-en">Products</span>
+                        <span class="lang-te">ఉత్పత్తులు</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" id="openWishlistBtn" class="nav-badge-wrapper">
+                        <span class="lang-en">Wishlist 🤍</span>
+                        <span class="lang-te">కోరికల జాబితా 🤍</span>
+                        <span class="nav-badge" id="wishlistBadge" style="display:none;">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="openCartBtn" class="nav-badge-wrapper">
+                        <span class="lang-en">Cart 🛒</span>
+                        <span class="lang-te">కార్ట్ 🛒</span>
+                        <span class="nav-badge" id="cartBadge" style="display:none;">0</span>
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'store:my_bookings' %}">
+                        <span class="lang-en">My Bookings</span>
+                        <span class="lang-te">నా బుకింగ్స్</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:logout' %}">
+                        <span class="lang-en">Logout ({{ user.username|truncatechars:8 }})</span>
+                        <span class="lang-te">లాగ్ అవుట్ ({{ user.username|truncatechars:8 }})</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'store:login' %}">
+                        <span class="lang-en">Login</span>
+                        <span class="lang-te">లాగిన్</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:register' %}">
+                        <span class="lang-en">Register</span>
+                        <span class="lang-te">నమోదు</span>
+                    </a>
+                </li>
+                {% endif %}
+                <!-- Theme Toggle Button -->
+                <li>
+                    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                        <!-- Moon Icon for dark theme -->
+                        <svg class="theme-icon moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        <!-- Sun Icon for light theme -->
+                        <svg class="theme-icon sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+                </li>
+                <!-- Language Selector Dropdown -->
+                <li>
+                    <div class="lang-select-wrapper">
+                        <select id="langSelector" class="lang-selector" aria-label="Select Language">
+                            <option value="en">EN</option>
+                            <option value="te">తెలుగు</option>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Sliding Drawer Panels (Cart) -->
+    <div class="drawer-overlay" id="cartOverlay"></div>
+    <div class="drawer-panel" id="cartPanel">
+        <div class="drawer-header">
+            <h2 class="drawer-title">Shopping Cart</h2>
+            <button class="drawer-close" id="closeCartBtn">&times;</button>
+        </div>
+        <div class="drawer-content" id="cartItems">
+            <!-- Dynamic items inject -->
+        </div>
+        <div class="drawer-footer">
+            <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-weight:700;">
+                <span>Subtotal:</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="btn btn-primary" id="checkoutBtn" style="width:100%; border:none;">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Sliding Drawer Panels (Wishlist) -->
+    <div class="drawer-overlay" id="wishlistOverlay"></div>
+    <div class="drawer-panel" id="wishlistPanel">
+        <div class="drawer-header">
+            <h2 class="drawer-title">My Wishlist</h2>
+            <button class="drawer-close" id="closeWishlistBtn">&times;</button>
+        </div>
+        <div class="drawer-content" id="wishlistItems">
+            <!-- Dynamic items inject -->
+        </div>
+    </div>
+
+    <!-- Track Order Drawer -->
+    <div class="drawer-overlay" id="trackOrderOverlay"></div>
+    <div class="drawer-panel" id="trackOrderPanel" style="z-index: 2200;">
+        <div class="drawer-header">
+            <h2 class="drawer-title">Track Your Order</h2>
+            <button class="drawer-close" id="closeTrackOrderBtn">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="form-group">
+                <label class="form-label">Enter Order ID</label>
+                <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="trackOrderIdInput" class="form-input" placeholder="e.g. MDE-123456" style="flex-grow:1;">
+                    <button class="btn btn-primary" id="trackOrderSearchBtn" style="padding:0 1.25rem; border:none;">Search</button>
+                </div>
+            </div>
+            <div id="trackOrderResult" style="margin-top:2rem; display:none;">
+                <div class="checkout-summary-box">
+                    <h4 id="trackOrderHeader" style="font-weight:700; margin-bottom:0.75rem; color:white;">Order: MDE-000000</h4>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin-bottom:1.5rem;">
+                        Status: <strong id="trackOrderStatus" style="color:var(--accent-cyan);">Pending</strong>
+                    </p>
+                    
+                    <!-- Track Wizard Steps -->
+                    <div style="display:flex; flex-direction:column; gap:1.5rem; position:relative; padding-left:1.5rem; border-left:2px solid var(--border-color); margin-top:1rem;">
+                        <div class="track-step" id="trackStepBooked">
+                            <span style="position:absolute; left:-6px; width:10px; height:10px; border-radius:50%; background:var(--accent-green);"></span>
+                            <h5 style="font-weight:700; color:white;">Order Booked</h5>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">Your booking request has been submitted successfully.</p>
+                        </div>
+                        <div class="track-step" id="trackStepAccepted">
+                            <span style="position:absolute; left:-6px; width:10px; height:10px; border-radius:50%; background:var(--border-color);" id="trackStepAcceptedIndicator"></span>
+                            <h5 style="font-weight:700; color:var(--text-secondary);" id="trackStepAcceptedTitle">Accepted by Showroom</h5>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">The dealer has verified and accepted the order items.</p>
+                        </div>
+                        <div class="track-step" id="trackStepDelivered">
+                            <span style="position:absolute; left:-6px; width:10px; height:10px; border-radius:50%; background:var(--border-color);" id="trackStepDeliveredIndicator"></span>
+                            <h5 style="font-weight:700; color:var(--text-secondary);" id="trackStepDeliveredTitle">Delivered</h5>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">Items delivered to customer showroom/home address.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="trackOrderError" style="margin-top:2rem; color:var(--accent-red); font-weight:600; text-align:center; display:none;">
+                Order ID not found. Please verify and try again.
+            </div>
+
+            <!-- Booking History Section -->
+            <div style="margin-top:2.5rem; border-top:1px solid var(--border-color); padding-top:1.5rem;">
+                <h3 style="font-size:1.1rem; margin-bottom:1rem; font-weight:750; color:white;">Your Booking History</h3>
+                <div id="myOrdersList" style="display:flex; flex-direction:column; gap:0.75rem;">
+                    <!-- Dynamic list from LocalStorage -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Comparison Tray -->
+    <div class="compare-tray" id="compareTray">
+        <div class="compare-tray-items" id="compareTrayItems">
+            <!-- Dynamic comparison items label -->
+        </div>
+        <button class="btn btn-primary" id="runCompareBtn" style="border:none; padding:0.5rem 1.25rem; font-size:0.85rem;">Compare Specifications</button>
+    </div>
+
+    <!-- Comparison Modal Sheet -->
+    <div class="modal-overlay" id="compareModalOverlay">
+        <div class="modal-container">
+            <button class="modal-close" id="closeCompareModal">&times;</button>
+            <h2 style="font-size:1.5rem; margin-bottom:1rem; font-weight:700;">Product Comparison</h2>
+            <div style="overflow-x:auto;">
+                <table class="compare-table">
+                    <tbody id="compareTableBody">
+                        <!-- Dynamic rows matrix comparison -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Multi-Step Wizard Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-container" style="max-width:550px;">
+            <button class="modal-close" id="closeCheckoutModal">&times;</button>
+            <h2 style="font-size:1.5rem; margin-bottom:1.5rem; font-weight:700;">Checkout Wizard</h2>
+            
+            <div class="wizard-steps">
+                <div class="wizard-step active" id="stepIndicator1">1</div>
+                <div class="wizard-step" id="stepIndicator2">2</div>
+                <div class="wizard-step" id="stepIndicator3">3</div>
+            </div>
+
+            <!-- Content Step 1: Shipping Details -->
+            <div class="wizard-content-step active" id="contentStep1">
+                <h3 style="font-size:1.1rem; margin-bottom:1rem; font-weight:600;">1. Delivery Details</h3>
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="deliveryName" class="form-input" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contact Number</label>
+                    <input type="text" id="deliveryPhone" class="form-input" placeholder="9876543210" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Street Address</label>
+                    <input type="text" id="deliveryAddress" class="form-input" placeholder="D.No. 27-57/3, Gokul Circle" required>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" id="deliveryCity" class="form-input" value="Punganur" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Zip/Postal Code</label>
+                        <input type="text" id="deliveryZip" class="form-input" value="517247" required>
+                    </div>
+                </div>
+                
+                <div class="checkout-summary-box">
+                    <h4 style="font-size:0.9rem; margin-bottom:0.5rem; font-weight:600;">Items Summary</h4>
+                    <div id="checkoutItemsList"></div>
+                    <div style="display:flex; justify-content:space-between; margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.05); font-weight:700;">
+                        <span>Total Amount:</span>
+                        <span id="checkoutSummarySubtotal">₹0</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="nextToStep2" style="width:100%; border:none; margin-top:1.5rem;">Continue to Payment</button>
+            </div>
+
+            <!-- Content Step 2: Payment Details -->
+            <div class="wizard-content-step" id="contentStep2">
+                <h3 style="font-size:1.1rem; margin-bottom:1rem; font-weight:600;">2. Payment Method</h3>
+                <div class="form-group">
+                    <label class="form-label">Choose Option</label>
+                    <div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:0.5rem;">
+                       <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                           <input type="radio" name="payment_option" value="card" style="accent-color:var(--accent-cyan);" checked>
+                           <span>Credit / Debit Card</span>
+                       </label>
+                       <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                           <input type="radio" name="payment_option" value="cod" style="accent-color:var(--accent-cyan);">
+                           <span>Cash on Delivery / Showroom Pick-up</span>
+                       </label>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:1rem; margin-top:2rem;">
+                    <button class="btn btn-secondary" id="backToStep1" style="flex:1;">Back</button>
+                    <button class="btn btn-primary" id="submitPayment" style="flex:1; border:none;">Complete Purchase</button>
+                </div>
+            </div>
+
+            <!-- Content Step 3: Success Receipt -->
+            <div class="wizard-content-step" id="contentStep3">
+                <div style="text-align:center; padding:1.5rem 0;">
+                    <span style="font-size:3.5rem; color:var(--accent-green); font-weight:bold;">✓</span>
+                    <h3 style="font-size:1.4rem; margin-top:1rem; font-weight:700;">Purchase Successful!</h3>
+                    <p style="color:var(--text-secondary); margin-top:0.5rem; font-size:0.95rem;">Thank you for your order. We are preparing your items.</p>
+                    
+                    <div class="checkout-summary-box" style="text-align:left; margin-top:1.5rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <span style="color:var(--text-muted);">Order Number:</span>
+                            <span id="orderNumber" style="font-weight:700; color:white;">MDE-000000</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <span style="color:var(--text-muted);">Amount Paid:</span>
+                            <span id="receiptSubtotal" style="font-weight:700; color:var(--accent-cyan);">₹0</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span style="color:var(--text-muted);">Estimated Delivery:</span>
+                            <span style="font-weight:700; color:var(--accent-green);">Within 24 Hours</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="finishCheckout" style="width:100%; border:none; margin-top:2rem;">Close Window</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-copy">
+                <p>&copy; 2026 {{ shop.name|default:"MD Electronics" }}. <span class="lang-en">All rights reserved.</span><span class="lang-te">అన్ని హక్కులు ప్రత్యేకించబడ్డాయి.</span></p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">{{ shop.address|default:"Gokul Circle, Punganur, Chittoor District, AP" }}</p>
+            </div>
+            <ul class="footer-links">
+                <li>
+                    <a href="{% url 'store:home' %}">
+                        <span class="lang-en">Home</span>
+                        <span class="lang-te">హోమ్</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:products' %}">
+                        <span class="lang-en">Products</span>
+                        <span class="lang-te">ఉత్పత్తులు</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'store:contact' %}">
+                        <span class="lang-en">Contact</span>
+                        <span class="lang-te">సంప్రదించండి</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/">
+                        <span class="lang-en">Admin Portal</span>
+                        <span class="lang-te">అడ్మిన్ పోర్టల్</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

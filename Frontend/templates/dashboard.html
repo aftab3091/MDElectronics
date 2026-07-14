@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Bookings - {{ shop.name|default:"MD Electronics" }}{% endblock %}
+
+{% block content %}
+<div class="dashboard-container fade-in-section">
+    <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
+        <span class="gradient-text">My Bookings</span>
+    </h2>
+    <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1rem;">View and track all your premium electronics and appliances booking history.</p>
+
+    {% if messages %}
+    <div style="margin-bottom: 1.5rem;">
+        {% for message in messages %}
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-green); color: #f8fafc; padding: 0.75rem 1rem; border-radius: 12px; margin-bottom: 0.5rem; font-size: 0.95rem;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if bookings %}
+    <div class="responsive-table-wrapper">
+        <table class="booking-table responsive-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th class="text-center">Quantity</th>
+                    <th>Status</th>
+                    <th class="text-right">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td data-label="Date" class="td-date">{{ booking.date|date:"d M Y, h:i A" }}</td>
+                    <td data-label="Product" class="td-product">
+                        <div class="product-cell-flex">
+                            {% if booking.product.image %}
+                            <img src="{{ booking.product.image.url }}" alt="{{ booking.product.name }}" class="product-cell-img" loading="lazy">
+                            {% else %}
+                            <div class="product-cell-noimg">No Img</div>
+                            {% endif %}
+                            <div class="product-cell-details">
+                                <a href="{% url 'store:product_detail' booking.product.id %}" class="product-cell-link">{{ booking.product.name }}</a>
+                                <span class="product-cell-cat">{{ booking.product.category }}</span>
+                                
+                                <!-- Booking Tracking Progress Stepper -->
+                                {% if booking.status == 'Cancelled' %}
+                                <div class="stepper-cancelled">
+                                    <span class="dot-red"></span> Booking Cancelled
+                                </div>
+                                {% else %}
+                                <div class="stepper-container">
+                                    <!-- Step 1: Placed -->
+                                    <span class="step-active-cyan">
+                                        <span class="dot-cyan"></span> Placed
+                                    </span>
+                                    <span class="step-arrow">➔</span>
+                                    
+                                    <!-- Step 2: Accepted -->
+                                    <span class="{% if booking.status == 'Confirmed' or booking.status == 'Accepted' or booking.status == 'Delivered' %}step-active-purple{% else %}step-muted{% endif %}">
+                                        <span class="dot-purple-muted {% if booking.status == 'Confirmed' or booking.status == 'Accepted' or booking.status == 'Delivered' %}active{% endif %}"></span> Accepted
+                                    </span>
+                                    <span class="step-arrow">➔</span>
+                                    
+                                    <!-- Step 3: Delivered -->
+                                    <span class="{% if booking.status == 'Delivered' %}step-active-green{% else %}step-muted{% endif %}">
+                                        <span class="dot-green-muted {% if booking.status == 'Delivered' %}active{% endif %}"></span> Delivered
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td data-label="Quantity" class="td-qty text-center">{{ booking.quantity }}</td>
+                    <td data-label="Status" class="td-status">
+                        {% if booking.status == 'Pending' %}
+                        <span class="badge badge-pending">Pending</span>
+                        {% elif booking.status == 'Confirmed' or booking.status == 'Accepted' %}
+                        <span class="badge badge-accepted">Accepted</span>
+                        {% elif booking.status == 'Delivered' %}
+                        <span class="badge badge-delivered">Delivered</span>
+                        {% elif booking.status == 'Cancelled' %}
+                        <span class="badge badge-cancelled">Cancelled</span>
+                        {% endif %}
+                    </td>
+                    <td data-label="Total Price" class="td-price text-right">₹{% widthratio booking.product.price 1 booking.quantity %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 5rem 2rem; color: var(--text-secondary);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+        <p style="font-size: 1.2rem; font-weight: 600; color: white; margin-bottom: 0.5rem;">No bookings found</p>
+        <p style="margin-bottom: 2rem;">You haven't booked any electronics yet. Check out our showcase!</p>
+        <a href="{% url 'store:products' %}" class="btn btn-primary" style="border: none; justify-content: center;">Explore Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

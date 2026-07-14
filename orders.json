@@ -1,0 +1,160 @@
+[
+    {
+        "id": "MDE-260201",
+        "customer_name": "Aftab Ali",
+        "customer_phone": "9876543210",
+        "customer_address": "Gokul Circle, Punganur - 517247",
+        "items": [
+            {
+                "id": 1,
+                "name": "LG OLED TV",
+                "price": 75000,
+                "quantity": 1
+            }
+        ],
+        "total_amount": 75000.0,
+        "payment_method": "cod",
+        "status": "Cancelled",
+        "date": "2026-07-11 02:00"
+    },
+    {
+        "id": "MDE-633759",
+        "customer_name": "Shaik Aftab",
+        "customer_phone": "9000286976",
+        "customer_address": "Shantinagar, Punganur - 517247",
+        "items": [
+            {
+                "id": 14,
+                "name": "Prestige Induction Cooktop",
+                "price": 3200,
+                "image": "/media/products/cooktop.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 3200.0,
+        "payment_method": "cod",
+        "status": "Cancelled",
+        "date": "2026-07-12 23:15"
+    },
+    {
+        "id": "MDE-319910",
+        "customer_name": "Shaik Aftab",
+        "customer_phone": "9000286976",
+        "customer_address": "Shantinagar, Punganur - 517247",
+        "items": [
+            {
+                "id": 12,
+                "name": "Haier 320L Double Door Refrigerator",
+                "price": 28500,
+                "image": "/media/products/refrigerator.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 28500.0,
+        "payment_method": "card",
+        "status": "Accepted",
+        "date": "2026-07-13 00:01"
+    },
+    {
+        "id": "MDE-760701",
+        "customer_name": "Shaik Aftab",
+        "customer_phone": "9000286976",
+        "customer_address": "Shantinagar, Punganur - 517247",
+        "items": [
+            {
+                "id": 13,
+                "name": "LG 65\" Ultra Smart TV",
+                "price": 72000,
+                "image": "/media/products/tv.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 72000.0,
+        "payment_method": "cod",
+        "status": "Accepted",
+        "date": "2026-07-13 00:31"
+    },
+    {
+        "id": "MDE-572409",
+        "customer_name": "Test User",
+        "customer_phone": "9999999999",
+        "customer_address": "123 Main St, PunganurPunganur - 517247517247",
+        "items": [
+            {
+                "id": 7,
+                "name": "Prestige Induction Cooktop",
+                "price": 3200,
+                "image": "/media/products/cooktop.png",
+                "quantity": 1
+            },
+            {
+                "id": 12,
+                "name": "Haier 320L Double Door Refrigerator",
+                "price": 28500,
+                "image": "/media/products/refrigerator.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 31700.0,
+        "payment_method": "cod",
+        "status": "Cancelled",
+        "date": "2026-07-13 00:59"
+    },
+    {
+        "id": "MDE-556133",
+        "customer_name": "Appu",
+        "customer_phone": "7685309876",
+        "customer_address": "tomoto market, Punganur - 517247",
+        "items": [
+            {
+                "id": 13,
+                "name": "LG 65\" Ultra Smart TV",
+                "price": 72000,
+                "image": "/media/products/tv.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 72000.0,
+        "payment_method": "cod",
+        "status": "Cancelled",
+        "date": "2026-07-13 01:23"
+    },
+    {
+        "id": "MDE-585213",
+        "customer_name": "Appu",
+        "customer_phone": "98765432109876543210",
+        "customer_address": "Chowdepalle RoadChowdepalle Road, PunganurPunPunganurPunganurganur - 517247517245172477",
+        "items": [
+            {
+                "id": 12,
+                "name": "Haier 320L Double Door Refrigerator",
+                "price": 28500,
+                "image": "/media/products/refrigerator.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 28500.0,
+        "payment_method": "card",
+        "status": "Accepted",
+        "date": "2026-07-13 10:32"
+    },
+    {
+        "id": "MDE-416314",
+        "customer_name": "AppuUser",
+        "customer_phone": "9876543210",
+        "customer_address": "Chowdepalle Road, PunganurPunganur - 517247517247",
+        "items": [
+            {
+                "id": 12,
+                "name": "Haier 320L Double Door Refrigerator",
+                "price": 28500,
+                "image": "/media/products/refrigerator.png",
+                "quantity": 1
+            }
+        ],
+        "total_amount": 28500.0,
+        "payment_method": "cod",
+        "status": "Accepted",
+        "date": "2026-07-13 10:44"
+    }
+]

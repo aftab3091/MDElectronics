@@ -1,0 +1,658 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | MD Electronics Control Panel</title>
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+
+  <!-- --- AUTHENTICATION OVERLAY --- -->
+  <div id="login-overlay" class="login-wrapper">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" fill="none" stroke="currentColor" width="32" height="32">
+          <rect x="2" y="2" width="20" height="20" rx="4"></rect>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        MD <span class="gradient-text">Control Panel</span>
+      </div>
+      <h3>Welcome back, Admin</h3>
+      <p>Log in using credentials to modify showroom variables and ledger sheets.</p>
+      
+      <form id="login-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="login-email">Username or Email</label>
+          <input type="text" id="login-email" placeholder="admin" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 24px;">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <div id="login-error-msg" class="error-banner" style="display: none;"></div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- --- DASHBOARD LAYOUT --- -->
+  <div id="dashboard-layout" class="dashboard-container" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-header">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" fill="none" stroke="currentColor" width="28" height="28" style="color: var(--accent);">
+          <rect x="2" y="2" width="20" height="20" rx="4"></rect>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        MD <span class="gradient-text">Control</span>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <button class="menu-item active" data-tab="tab-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Overview
+        </button>
+        <button class="menu-item" data-tab="tab-products">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Products CRUD
+        </button>
+        <button class="menu-item" data-tab="tab-shop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          Shop Customization
+        </button>
+        <button class="menu-item" data-tab="tab-gallery">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          Showroom Gallery
+        </button>
+        <button class="menu-item" data-tab="tab-ledger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Ledger Sheet
+        </button>
+        <button class="menu-item" data-tab="tab-offers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16l7-4 7 4z"></path></svg>
+          Offers & Sales
+        </button>
+        <button class="menu-item" data-tab="tab-instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          Instagram Feed
+        </button>
+        <button class="menu-item" data-tab="tab-orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          Customer Bookings
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="menu-item theme-toggle" id="theme-toggle-btn" style="margin-bottom: 8px;">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span>Light Mode</span>
+        </button>
+        <button class="menu-item logout" id="logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="dashboard-main">
+      <header class="dashboard-topbar">
+        <div class="topbar-title" id="active-tab-title">Overview Dashboard</div>
+        <div class="admin-profile-badge">
+          <span class="avatar-dot"></span>
+          <span id="admin-display-email">admin@mdelectronics.com</span>
+        </div>
+      </header>
+
+      <div class="dashboard-content-panel">
+
+        <!-- === TAB 1: OVERVIEW === -->
+        <section class="tab-panel active" id="tab-overview">
+          <div class="stats-grid">
+            <!-- Card 1: Sales -->
+            <div class="stat-card">
+              <div class="stat-icon sales">₹</div>
+              <div>
+                <p class="stat-label">Total Sales Recorded</p>
+                <h3 class="stat-value" id="stat-total-sales">₹0</h3>
+              </div>
+            </div>
+            <!-- Card 2: Dues -->
+            <div class="stat-card">
+              <div class="stat-icon due">!</div>
+              <div>
+                <p class="stat-label">Outstanding Ledger Dues</p>
+                <h3 class="stat-value" id="stat-total-dues">₹0</h3>
+              </div>
+            </div>
+            <!-- Card 3: Customers -->
+            <div class="stat-card">
+              <div class="stat-icon customers">👤</div>
+              <div>
+                <p class="stat-label">Customers Managed</p>
+                <h3 class="stat-value" id="stat-total-customers">0</h3>
+              </div>
+            </div>
+            <!-- Card 4: Products -->
+            <div class="stat-card">
+              <div class="stat-icon products">📦</div>
+              <div>
+                <p class="stat-label">Product Inventories</p>
+                <h3 class="stat-value" id="stat-total-products">0</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Placeholder Grid -->
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-top: 30px;">
+            <!-- Activity -->
+            <div class="panel-card">
+              <h3>Recent Ledger Transactions</h3>
+              <div style="margin-top: 16px; overflow-x: auto;">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Items Purchased</th>
+                      <th>Total Amt</th>
+                      <th>Due Amt</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-recent-transactions">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Quick Actions -->
+            <div class="panel-card">
+              <h3>Quick Store Actions</h3>
+              <div class="quick-actions-container">
+                <button class="quick-action-btn add-product" onclick="document.querySelector('[data-tab=tab-products]').click();">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Add New Product
+                </button>
+                <button class="quick-action-btn update-settings" onclick="document.querySelector('[data-tab=tab-shop]').click();">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                  Update Store Settings
+                </button>
+                <a href="{% url 'store:home' %}" target="_blank" class="quick-action-btn launch-store">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                  Launch Live Storefront
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === TAB 2: PRODUCTS CRUD === -->
+        <section class="tab-panel" id="tab-products">
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+            <!-- Left Panel Form -->
+            <div class="panel-card">
+              <h3 id="product-form-title">Add New Product</h3>
+              <form id="product-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 14px;" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="product-edit-id">
+                
+                <div class="form-group">
+                  <label for="prod-name">Product Title</label>
+                  <input type="text" id="prod-name" placeholder="E.g. Voltas Inverter split AC" required>
+                </div>
+                
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="prod-brand">Brand</label>
+                    <input type="text" id="prod-brand" placeholder="Voltas" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="prod-category">Category</label>
+                    <select id="prod-category">
+                      <option value="Home Appliances">Home Appliances</option>
+                      <option value="Smart TVs & Electronics">Smart TVs & Electronics</option>
+                      <option value="Kitchen Appliances">Kitchen Appliances</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="prod-discountedPrice">Offer Price (₹)</label>
+                    <input type="number" id="prod-discountedPrice" placeholder="42990" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="prod-originalPrice">Original Price (₹)</label>
+                    <input type="number" id="prod-originalPrice" placeholder="65990" required>
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="prod-stock">Stock Quantity</label>
+                    <input type="number" id="prod-stock" value="10" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="prod-badge">Badge (Optional)</label>
+                    <input type="text" id="prod-badge" placeholder="Bestseller, 10% OFF">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="prod-desc">Description</label>
+                  <textarea id="prod-desc" rows="3" placeholder="Detailed product summary..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="prod-specs">Specs (JSON text or Key-Val)</label>
+                  <textarea id="prod-specs" rows="3" placeholder='{"Capacity": "1.5 Ton", "Energy Rating": "5 Star"}'></textarea>
+                  <small style="color: var(--text-muted); font-size: 11px;">Format: {"Key1": "Value1", "Key2": "Value2"}</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="prod-image">Product Image File</label>
+                  <input type="file" id="prod-image" accept="image/*">
+                  <div id="edit-img-preview-container" style="display: none; align-items: center; gap: 10px; margin-top: 6px;">
+                    <img id="edit-img-preview" src="" style="height: 40px; border-radius: 4px;">
+                    <label class="checkbox-label" style="font-size: 12px; color: var(--danger);">
+                      <input type="checkbox" id="prod-remove-image"> Delete photo
+                    </label>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                  <button type="button" class="btn-primary" id="cancel-prod-edit-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary); display: none;">Cancel</button>
+                  <button type="submit" class="btn-primary" style="flex-grow: 1;">Save Product</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Panel List Table -->
+            <div class="panel-card">
+              <h3>Inventory List</h3>
+              <div style="margin-top: 20px; overflow-x: auto;">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Image</th>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Offer Price</th>
+                      <th>Stock</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-product-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === TAB 3: SHOP CUSTOMIZATION === -->
+        <section class="tab-panel" id="tab-shop">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- Column 1: Details and Achievements -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+              <!-- Details Form -->
+              <div class="panel-card">
+                <h3>Store Identity Information</h3>
+                <form id="shop-details-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="shop-name-input">Shop Title</label>
+                    <input type="text" id="shop-name-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="shop-tagline-input">Shop Tagline</label>
+                    <input type="text" id="shop-tagline-input">
+                  </div>
+                  <div class="form-group">
+                    <label for="shop-desc-input">Footer Description</label>
+                    <textarea id="shop-desc-input" rows="3"></textarea>
+                  </div>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="shop-phone-input">Contact Phone</label>
+                      <input type="text" id="shop-phone-input" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="shop-hours-input">Store Working Hours</label>
+                      <input type="text" id="shop-hours-input" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="shop-address-input">Full Address</label>
+                    <input type="text" id="shop-address-input" required>
+                  </div>
+                  <button type="submit" class="btn-primary" style="margin-top: 10px;">Save Shop Details</button>
+                </form>
+              </div>
+
+              <!-- Achievements Form -->
+              <div class="panel-card">
+                <h3>Achievements & Highlights</h3>
+                <form id="shop-achievements-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+                  {% csrf_token %}
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="ach-experience-input">Years of Trust</label>
+                      <input type="number" id="ach-experience-input" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="ach-customers-input">Customers Served</label>
+                      <input type="number" id="ach-customers-input" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="ach-awards-input">Certificates & Awards (Commas split)</label>
+                    <textarea id="ach-awards-input" rows="2" placeholder="Best Local Appliance Dealer Award, Authorized Gold Partner Seal"></textarea>
+                  </div>
+                  <button type="submit" class="btn-primary" style="margin-top: 10px;">Save Stats & Awards</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Column 2: About / Owner Section -->
+            <div class="panel-card" style="height: fit-content;">
+              <h3>Owner / About Section</h3>
+              <form id="shop-about-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 14px;">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="about-owner-name">Owner Full Name</label>
+                  <input type="text" id="about-owner-name" required>
+                </div>
+                <div class="form-group">
+                  <label for="about-owner-bio">Owner Biography/Welcome Message</label>
+                  <textarea id="about-owner-bio" rows="6" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="about-owner-photo">Owner Photo</label>
+                  <input type="file" id="about-owner-photo" accept="image/*">
+                  <div id="owner-avatar-preview-container" style="display: none; align-items: center; gap: 10px; margin-top: 10px;">
+                    <img id="owner-avatar-preview" src="" style="height: 60px; width: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                    <span style="font-size: 12px; color: var(--text-muted);">Current Avatar Image</span>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Save Owner Biography</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- === TAB 4: SHOWROOM GALLERY === -->
+        <section class="tab-panel" id="tab-gallery">
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+            <!-- Upload Panel -->
+            <div class="panel-card" style="height: fit-content;">
+              <h3>Upload Showroom Image</h3>
+              <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Add pictures showing the interior, banners or store display, showing dynamically on homepage.</p>
+              
+              <form id="gallery-upload-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="gallery-image-file">Choose Image File</label>
+                  <input type="file" id="gallery-image-file" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn-primary">Upload to Gallery</button>
+              </form>
+            </div>
+
+            <!-- Photos Matrix Panel -->
+            <div class="panel-card">
+              <h3>Showroom Photos Grid</h3>
+              <div id="admin-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-top: 20px;">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- === TAB 5: LEDGER SHEET === -->
+        <section class="tab-panel" id="tab-ledger">
+          <!-- Add manual customer transaction -->
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+            <button class="btn-primary" id="open-ledger-modal-btn">+ Add Customer Ledger Entry</button>
+          </div>
+
+          <div class="panel-card">
+            <h3>Customer Dues & Ledger Register</h3>
+            <div style="margin-top: 20px; overflow-x: auto;">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Items Purchased</th>
+                    <th>Total Amt</th>
+                    <th>Amount Paid</th>
+                    <th>Amount Due</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ledger-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- === TAB 6: OFFERS & SALES === -->
+        <section class="tab-panel" id="tab-offers">
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+            <!-- Left Panel Form -->
+            <div class="panel-card">
+              <h3 id="offer-form-title">Create New Promo Offer</h3>
+              <form id="offer-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 14px;">
+                {% csrf_token %}
+                <input type="hidden" id="offer-edit-id">
+                
+                <div class="form-group">
+                  <label for="offer-title">Offer Heading / Title</label>
+                  <input type="text" id="offer-title" placeholder="E.g. Festival Mega Sale!" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="offer-desc">Description / Details</label>
+                  <textarea id="offer-desc" rows="3" placeholder="E.g. Get up to 40% off on all LG and Bosch Home Appliances. Valid till Sunday." required></textarea>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="offer-promocode">Promo Code (Optional)</label>
+                    <input type="text" id="offer-promocode" placeholder="E.g. FESTIVE40">
+                  </div>
+                  <div class="form-group">
+                    <label for="offer-color">Banner Theme Color</label>
+                    <select id="offer-color">
+                      <option value="#e11d48">Rose / Coral Red</option>
+                      <option value="#2563eb">Royal Blue</option>
+                      <option value="#16a34a">Emerald Green</option>
+                      <option value="#d97706">Gold / Amber</option>
+                      <option value="#7c3aed">Purple / Amethyst</option>
+                      <option value="#111827">Midnight Black</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="offer-active" checked> Active and visible on storefront
+                  </label>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                  <button type="button" class="btn-primary" id="cancel-offer-edit-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary); display: none;">Cancel</button>
+                  <button type="submit" class="btn-primary" style="flex-grow: 1;">Save Offer</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Panel List Table -->
+            <div class="panel-card">
+              <h3>Active & Scheduled Promotions</h3>
+              <div style="margin-top: 20px; overflow-x: auto;">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Promo Code</th>
+                      <th>Color</th>
+                      <th>Status</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-offers-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Instagram Feed Management Panel -->
+        <section class="tab-panel" id="tab-instagram">
+          <div class="form-grid">
+            <!-- Left panel: Add new post -->
+            <div class="panel-card" style="height: fit-content;">
+              <h3 id="insta-form-title">Link New Instagram Post</h3>
+              <form id="insta-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 14px;">
+                {% csrf_token %}
+                <input type="hidden" id="insta-id" value="">
+                <div class="form-group">
+                  <label for="insta-url">Instagram Post or Reel URL</label>
+                  <input type="url" id="insta-url" placeholder="https://www.instagram.com/p/Cw9vP61Sg8t/" required>
+                  <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                    Paste the link of any public post or reel from your Instagram account.
+                  </p>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                  <button type="button" class="btn-primary" id="cancel-insta-edit-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary); display: none;">Cancel</button>
+                  <button type="submit" id="insta-submit-btn" class="btn-primary" style="flex-grow: 1;">Add Instagram Post</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Panel: List of links -->
+            <div class="panel-card">
+              <h3>Embedded Instagram Posts</h3>
+              <div style="margin-top: 20px; overflow-x: auto;">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Instagram Post URL</th>
+                      <th>Added On</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-insta-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- --- PANEL TAB: CUSTOMER BOOKINGS & ORDERS --- -->
+        <section class="tab-panel" id="tab-orders">
+          <div class="panel-header">
+            <h2>Customer Bookings & Orders</h2>
+            <p>Manage order verification, shipment acceptance, and delivery status updates for region showroom requests.</p>
+          </div>
+          
+          <div class="panel-card" style="margin-top: 20px;">
+            <div style="overflow-x: auto;">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th style="min-width: 90px; white-space: nowrap;">Order ID</th>
+                    <th style="min-width: 130px; white-space: nowrap;">Customer Name</th>
+                    <th style="min-width: 100px; white-space: nowrap;">Phone</th>
+                    <th style="min-width: 150px;">Address</th>
+                    <th style="min-width: 95px; white-space: nowrap;">Total Amt</th>
+                    <th style="min-width: 90px; white-space: nowrap;">Payment</th>
+                    <th style="min-width: 100px; white-space: nowrap;">Status</th>
+                    <th style="min-width: 150px; text-align: right; white-space: nowrap;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-table-body">
+                  <!-- Dynamic bookings lines loaded via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- --- LEDGER CUSTOMER MODAL --- -->
+  <div class="modal-overlay" id="ledger-modal-overlay">
+    <div class="modal" style="max-width: 500px;">
+      <button class="modal-close-btn" id="ledger-modal-close-btn">&times;</button>
+      <div style="padding: 30px;">
+        <h3 id="ledger-modal-title">Record New Customer Ledger</h3>
+        <form id="ledger-form" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+          {% csrf_token %}
+          <input type="hidden" id="ledger-edit-id">
+          
+          <div class="form-group">
+            <label for="led-name">Customer Full Name</label>
+            <input type="text" id="led-name" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="led-phone">Phone Number</label>
+            <input type="tel" id="led-phone" placeholder="9876543210" required>
+          </div>
+          <div class="form-group">
+            <label for="led-items">Items Description</label>
+            <input type="text" id="led-items" placeholder="1x Split AC, 1x Digital Stabilizer" required>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="led-total">Total Amount (₹)</label>
+              <input type="number" id="led-total" placeholder="45440" required>
+            </div>
+            <div class="form-group">
+              <label for="led-paid">Amount Paid (₹)</label>
+              <input type="number" id="led-paid" placeholder="40000" value="0">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%;">Save Ledger Record</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- --- SCRIPT LOADING --- -->
+  <script src="{% static 'js/admin.js' %}"></script>
+</body>
+</html>

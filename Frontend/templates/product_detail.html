@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - MDElectronics{% endblock %}
+
+{% block content %}
+<div class="detail-container fade-in-section">
+    <!-- Image Box -->
+    <div class="detail-img-box">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+        {% else %}
+        <img src="https://via.placeholder.com/600x600" alt="{{ product.name }}" loading="lazy">
+        {% endif %}
+    </div>
+
+    <!-- Product Info Details Box -->
+    <div class="detail-info-box">
+        <div class="detail-breadcrumbs">
+            <a href="{% url 'store:home' %}">Home</a>
+            <span>/</span>
+            <a href="{% url 'store:products' %}">Products</a>
+            <span>/</span>
+            <a href="{% url 'store:products' %}?category={{ product.category }}">{{ product.category }}</a>
+            <span>/</span>
+            <span>{{ product.name }}</span>
+        </div>
+
+        <span class="detail-cat-badge">{{ product.category }}</span>
+        <h1 class="detail-title">{{ product.name }}</h1>
+        
+        <div class="detail-price">{{ product.price|floatformat:0 }}</div>
+
+        <div class="detail-desc-box">
+            <h3 class="detail-desc-title">Product Overview</h3>
+            <p class="detail-desc-text">{{ product.description }}</p>
+        </div>
+
+        <div class="purchase-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+            <button class="btn btn-secondary buy-btn" data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" data-image="{% if product.image %}{{ product.image.url }}{% endif %}" style="border: 1px solid var(--border-color); flex: 1; min-width: 150px;">Add to Cart</button>
+            
+            <form action="{% url 'store:book_product' product.id %}" method="POST" style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 220px;">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="1" min="1" max="10" class="form-input" style="width: 75px; text-align: center; height: 100%; font-weight: 700; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);" required>
+                <button type="submit" class="btn btn-primary" style="flex: 1; border: none; font-weight: 700; white-space: nowrap;">Book Now</button>
+            </form>
+            
+            <a href="{% url 'store:products' %}" class="btn btn-secondary" style="width: 100%; text-align: center; justify-content: center; margin-top: 0.5rem; border: 1px solid var(--border-color);">Back to Products</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
