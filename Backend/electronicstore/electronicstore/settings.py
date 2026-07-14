@@ -92,7 +92,7 @@ ROOT_URLCONF = 'electronicstore.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'frontend/templates'],
+        'DIRS': [BASE_DIR / 'Frontend' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
