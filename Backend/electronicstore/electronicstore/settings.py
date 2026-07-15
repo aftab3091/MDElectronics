@@ -38,8 +38,18 @@ DEBUG = False
 
 if IS_PRODUCTION:
     ALLOWED_HOSTS = [h for h in os.getenv("ALLOWED_HOSTS", "*").split(",") if h]
+    render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+    if render_hostname and render_hostname not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(render_hostname)
+    
+    # Define CSRF_TRUSTED_ORIGINS to avoid CSRF validation issues in production
+    CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h and h != "*"]
 else:
     ALLOWED_HOSTS = ["*"]
+
+print("ALLOWED_HOSTS:", ALLOWED_HOSTS)
+if IS_PRODUCTION:
+    print("CSRF_TRUSTED_ORIGINS:", CSRF_TRUSTED_ORIGINS)
 
 # HTTPS & SECURITY SETTINGS (ONLY IN PRODUCTION)
 SECURE_SSL_REDIRECT = False
