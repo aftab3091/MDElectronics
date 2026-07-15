@@ -2,17 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "Backend/electronicstore/electronicstore/wsgi.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/staticfiles/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "Backend/electronicstore/electronicstore/wsgi.py"
+      "dest": "api/index.py"
     }
-  ],
-  "env": {
-    "PYTHONPATH": "Backend/electronicstore"
-  }
+  ]
 }

@@ -37,7 +37,7 @@ if not SECRET_KEY:
 DEBUG = False
 
 if IS_PRODUCTION:
-    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+    ALLOWED_HOSTS = [h for h in os.getenv("ALLOWED_HOSTS", "*").split(",") if h]
 else:
     ALLOWED_HOSTS = ["*"]
 
