@@ -227,9 +227,9 @@ body.light-theme .promo-offer-title {
 <!-- Hero Section -->
 <section class="hero fade-in-section">
     <div class="hero-content">
-        <h1>MD Electronics<br><span class="gradient-text">Punganur</span></h1>
+        <h1>Electronics, Gadgets &<br><span class="gradient-text">Smart Devices</span></h1>
         <p class="lang-en">Smart Electronics for Modern Living</p>
-        <p class="lang-te" style="font-size: 1.4rem; font-weight: 600; color: #06b6d4; margin-bottom: 1rem;">ఆధునిక జీవనశైలి కోసం స్మార్ట్ ఎలక్ట్రానిక్స్</p>
+        <p class="lang-te" style="font-size: 1.4rem; font-weight: 600; color: var(--accent-cyan); margin-bottom: 1rem;">ఆధునిక జీవనశైలి కోసం స్మార్ట్ ఎలక్ట్రానిక్స్</p>
         
         <div class="hero-separator"></div>
         
@@ -237,19 +237,53 @@ body.light-theme .promo-offer-title {
         <p class="lang-te hero-description">అగ్రశ్రేణి బ్రాండ్ల నుండి అత్యాధునిక ఎలక్ట్రానిక్స్ మరియు గృహోపకరణాలను అన్వేషించండి. నాణ్యమైన ఉత్పత్తులు, ఉత్తమ ధరలు మరియు నమ్మకమైన సేవలు – అన్నీ ఒకే చోట.</p>
         
         <div class="hero-buttons">
-            <a href="{% url 'store:products' %}" class="btn-primary-premium">
-                <span class="lang-en">Our Showcase <span style="margin-left: 8px;">→</span></span>
-                <span class="lang-te">మా ప్రదర్శనశాల <span style="margin-left: 8px;">→</span></span>
+            <a href="{% url 'store:products' %}" class="btn btn-primary">
+                <span class="lang-en">Shop Now →</span>
+                <span class="lang-te">ఇప్పుడే కొనండి →</span>
             </a>
-            <a href="{% url 'store:contact' %}" class="btn-secondary-premium">
-                <span class="lang-en">Visit Showroom <span style="margin-left: 8px;">→</span></span>
-                <span class="lang-te">షోరూమ్ సందర్శించండి <span style="margin-left: 8px;">→</span></span>
+            <a href="{% url 'store:contact' %}" class="btn btn-secondary">
+                <span class="lang-en">Book Service</span>
+                <span class="lang-te">సేవ బుక్ చేయండి</span>
             </a>
         </div>
     </div>
     <div class="hero-image-wrapper">
         <div class="hero-glow"></div>
         <img src="{% static 'images/hero_appliances.png' %}" alt="Smart Home Appliances" class="hero-appliance-image" loading="lazy">
+    </div>
+</section>
+
+<!-- Featured Categories Grid -->
+<section class="products-section fade-in-section" style="margin-top: 1rem; margin-bottom: 4rem;">
+    <h2 class="section-title">
+        <span class="lang-en">Shop by Category</span>
+        <span class="lang-te">వర్గం ద్వారా షాప్</span>
+    </h2>
+    <div class="brands-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <a href="{% url 'store:products' %}?category=Home+Appliances" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">🏠</span>
+            <span style="font-size:1rem;">Home Appliances</span>
+        </a>
+        <a href="{% url 'store:products' %}?category=Kitchen+Appliances" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">🍳</span>
+            <span style="font-size:1rem;">Kitchen Appliances</span>
+        </a>
+        <a href="{% url 'store:products' %}?category=Smart+TVs+%26+Electronics" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">📺</span>
+            <span style="font-size:1rem;">Smart TVs & Electronics</span>
+        </a>
+        <a href="{% url 'store:products' %}" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">❄️</span>
+            <span style="font-size:1rem;">Refrigerators</span>
+        </a>
+        <a href="{% url 'store:products' %}" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">🧺</span>
+            <span style="font-size:1rem;">Washing Machines</span>
+        </a>
+        <a href="{% url 'store:products' %}" class="brand-logo-card" style="flex-direction:column; gap:0.75rem; padding:2rem 1rem;">
+            <span style="font-size:2.5rem;">🌬️</span>
+            <span style="font-size:1rem;">Air Conditioners</span>
+        </a>
     </div>
 </section>
 

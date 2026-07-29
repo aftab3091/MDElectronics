@@ -49,17 +49,17 @@
         <p>Fill in details below and our sales agent will call you back within 24 hours.</p>
         <form id="contactForm" novalidate>
             {% csrf_token %}
-            <div class="form-group">
-                <label for="name" class="form-label">Full Name</label>
-                <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+            <div class="floating-label-group">
+                <input type="text" id="name" class="form-input" placeholder=" " required>
+                <label>Full Name</label>
             </div>
-            <div class="form-group">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="tel" id="phone" class="form-input" placeholder="9876543210" required>
+            <div class="floating-label-group">
+                <input type="tel" id="phone" class="form-input" placeholder=" " required>
+                <label>Phone Number</label>
             </div>
             <div class="form-group">
                 <label for="category" class="form-label">Select Appliance Category</label>
-                <select id="category" class="form-input" style="background:#090d16;" required>
+                <select id="category" class="form-input" style="background:var(--bg-main);" required>
                     <option value="">Choose category...</option>
                     <option value="Home Appliances">Home Appliances (Fridge, Washing Machine, AC)</option>
                     <option value="Kitchen Appliances">Kitchen Appliances (Induction, Microwave)</option>
@@ -67,9 +67,9 @@
                     <option value="General Enquiry" selected>General Enquiry</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="message" class="form-label">Message / Specification Details</label>
-                <textarea id="message" class="form-input" placeholder="I am looking for a 5-star inverter AC for my home..." required></textarea>
+            <div class="floating-label-group">
+                <textarea id="message" class="form-input" placeholder=" " required></textarea>
+                <label>Message / Specification Details</label>
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%; border: none;">Submit Inquiry</button>
         </form>
